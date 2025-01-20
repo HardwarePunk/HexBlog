@@ -22,11 +22,17 @@ class Post(db.Model):
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    published_at = db.Column(db.DateTime)
+    published_at = db.Column(db.DateTime, nullable=True)
     
     # Relationships
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     
+    def __init__(self, *args, **kwargs):
+        is_published = kwargs.pop('is_published', False)
+        super().__init__(*args, **kwargs)
+        if is_published:
+            self.published_at = datetime.utcnow()
+            
     def __str__(self):
         return f'<Post {self.title}>'
     
@@ -37,15 +43,16 @@ class Post(db.Model):
         minutes = words / 200  # Average reading speed
         return round(minutes)
     
-    def generate_slug(self):
+    @classmethod
+    def generate_slug(cls, title):
         """Generate URL-friendly slug from title"""
-        slug = re.sub(r'[^\w\s-]', '', self.title.lower())
+        slug = re.sub(r'[^\w\s-]', '', title.lower())
         slug = re.sub(r'[-\s]+', '-', slug).strip('-')
         base_slug = slug
         counter = 1
         
         # Ensure unique slug
-        while Post.query.filter_by(slug=slug).first():
+        while cls.query.filter_by(slug=slug).first():
             slug = f"{base_slug}-{counter}"
             counter += 1
             

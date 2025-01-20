@@ -3,6 +3,10 @@ from flask_security import UserMixin, RoleMixin
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
+import qrcode
+import base64
+from io import BytesIO
+import pyotp
 
 # Role-User association table for Flask-Security
 roles_users = db.Table('roles_users',
@@ -65,3 +69,19 @@ class User(db.Model, UserMixin):
     def check_password(self, password):
         """Check if password matches hash"""
         return check_password_hash(self.password, password)
+
+    def get_2fa_qr_code(self):
+        """Generate QR code for 2FA setup"""
+        if not self.tf_totp_secret:
+            return None
+            
+        totp = pyotp.TOTP(self.tf_totp_secret)
+        provisioning_uri = totp.provisioning_uri(
+            self.email,
+            issuer_name='Retro Blog'
+        )
+        
+        img = qrcode.make(provisioning_uri)
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        return base64.b64encode(buffered.getvalue()).decode()

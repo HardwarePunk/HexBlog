@@ -4,6 +4,7 @@ import sys
 import tempfile
 import pytest
 from pathlib import Path
+from datetime import datetime
 
 # Add the parent directory to Python path so we can import app
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -53,6 +54,7 @@ def app():
             is_published=True,
             author=admin
         )
+        post.publish()  # This will set published_at
         db.session.add(post)
         
         db.session.commit()

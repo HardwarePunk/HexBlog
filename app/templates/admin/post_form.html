@@ -32,7 +32,7 @@
             <div class="form-group">
                 <label for="title">📝 Title</label>
                 <input type="text" id="title" name="title" required
-                       value="{{ post.title if post else '' }}"
+                       value="{{ title if title else (post.title if post else '') }}"
                        placeholder="Your awesome post title">
             </div>
             
@@ -44,7 +44,7 @@
             <div class="form-group">
                 <label for="summary">📋 Summary</label>
                 <textarea id="summary" name="summary" rows="3"
-                          placeholder="A brief summary of your post">{{ post.summary if post else '' }}</textarea>
+                          placeholder="A brief summary of your post">{{ summary if summary else (post.summary if post else '') }}</textarea>
             </div>
             
             <div class="form-group">
@@ -57,7 +57,7 @@
             <div class="form-group">
                 <label class="checkbox-label">
                     <input type="checkbox" name="is_published" 
-                           {% if post and post.is_published %}checked{% endif %}>
+                           {% if (is_published is defined and is_published) or (post and post.is_published) %}checked{% endif %}>
                     🌟 Publish immediately
                 </label>
             </div>
@@ -97,6 +97,8 @@
     // Set initial content if editing
     {% if post and post.content %}
         quill.root.innerHTML = {{ post.content|tojson|safe }};
+    {% elif content %}
+        quill.root.innerHTML = {{ content|tojson|safe }};
     {% endif %}
 
     // Handle form submission

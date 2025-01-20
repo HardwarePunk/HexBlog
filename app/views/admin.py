@@ -55,21 +55,44 @@ def posts():
 def new_post():
     """Create new post"""
     if request.method == 'POST':
-        title = request.form.get('title')
-        content = request.form.get('content')
-        summary = request.form.get('summary')
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
+        summary = request.form.get('summary', '').strip()
         is_published = bool(request.form.get('is_published'))
+        
+        # Validate required fields
+        if not title:
+            flash('Title is required! >w<', 'error')
+            return render_template('admin/post_form.html', 
+                                title=title, 
+                                content=content, 
+                                summary=summary, 
+                                is_published=is_published)
+            
+        if not content:
+            flash('Content is required! >w<', 'error')
+            return render_template('admin/post_form.html', 
+                                title=title, 
+                                content=content, 
+                                summary=summary, 
+                                is_published=is_published)
+        
+        # Generate and validate slug
+        slug = Post.generate_slug(title)
+        existing_post = Post.query.filter_by(slug=slug).first()
+        if existing_post:
+            slug += '-1'
+            while Post.query.filter_by(slug=slug).first():
+                slug = slug.rsplit('-', 1)[0] + '-' + str(int(slug.rsplit('-', 1)[1]) + 1)
         
         post = Post(
             title=title,
             content=content,
             summary=summary,
+            slug=slug,
             author=current_user,
             is_published=is_published
         )
-        
-        # Generate slug from title
-        post.slug = post.generate_slug()
         
         db.session.add(post)
         db.session.commit()
@@ -87,13 +110,37 @@ def edit_post(id):
     post = Post.query.get_or_404(id)
     
     if request.method == 'POST':
-        post.title = request.form.get('title')
-        post.content = request.form.get('content')
-        post.summary = request.form.get('summary')
-        post.is_published = bool(request.form.get('is_published'))
+        title = request.form.get('title', '').strip()
+        content = request.form.get('content', '').strip()
+        summary = request.form.get('summary', '').strip()
+        original_title = request.form.get('original_title')
+        is_published = bool(request.form.get('is_published'))
         
-        if post.title != request.form.get('original_title'):
-            post.slug = post.generate_slug()
+        # Validate required fields
+        if not title:
+            flash('Title is required! >w<', 'error')
+            return render_template('admin/post_form.html', post=post)
+            
+        if not content:
+            flash('Content is required! >w<', 'error')
+            return render_template('admin/post_form.html', post=post)
+        
+        # Handle publishing state change
+        if is_published and not post.is_published:
+            post.publish()
+        elif not is_published and post.is_published:
+            post.unpublish()
+            
+        post.title = title
+        post.content = content
+        post.summary = summary
+        
+        # Generate and validate slug if title changed
+        if title != original_title:
+            post.slug = Post.generate_slug(title)
+            if Post.query.filter(Post.id != id, Post.slug == post.slug).first():
+                flash('Slug already exists! Please choose a different title! uwu', 'error')
+                return render_template('admin/post_form.html', post=post)
         
         db.session.commit()
         flash('Post updated successfully! 🌟', 'success')

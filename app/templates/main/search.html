@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="search-results">
+    <h1>Search Results for "{{ query }}" ✨</h1>
+    
+    {% if posts %}
+        {% for post in posts %}
+            <div class="post-card">
+                <div class="post-card-header">
+                    <h2>📝 {{ post.title }}</h2>
+                    <span class="post-date">📅 {{ post.created_at|format_date }}</span>
+                </div>
+                <div class="post-card-preview">
+                    {{ post.summary or post.content[:200] + '...' }}
+                </div>
+                <div class="post-card-footer">
+                    <a href="{{ url_for('main.post', slug=post.slug) }}" class="btn btn-primary">
+                        Read More ✨
+                    </a>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="no-results">
+            <p>No posts found matching your search! >w<</p>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

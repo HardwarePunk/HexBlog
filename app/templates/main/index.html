@@ -3,9 +3,7 @@
 {% block content %}
 <div class="blog-container">
     <div class="welcome-banner">
-        <img src="{{ url_for('static', filename='images/star.gif') }}" alt="star">
-        <h1>✨ Welcome to My Super Cool Blog! ✨</h1>
-        <img src="{{ url_for('static', filename='images/star.gif') }}" alt="star">
+        <h1>Welcome to My Super Cool Blog!</h1>
         <marquee scrollamount="3">🌟 Check out my awesome posts below! 🌟</marquee>
     </div>
 
@@ -34,7 +32,6 @@
             </div>
         {% else %}
             <div class="no-posts">
-                <img src="{{ url_for('static', filename='images/construction.gif') }}" alt="Under Construction">
                 <p>No posts available yet! Check back soon! ✨</p>
             </div>
         {% endfor %}

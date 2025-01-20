@@ -82,9 +82,20 @@ def register():
         return redirect(url_for('main.index'))
         
     if request.method == 'POST':
-        email = request.form.get('email')
-        username = request.form.get('username')
+        email = request.form.get('email', '').strip()
+        username = request.form.get('username', '').strip()
         password = request.form.get('password')
+        password_confirm = request.form.get('password_confirm')
+        
+        # Validate email format
+        if '@' not in email or '.' not in email:
+            flash('Invalid email address! >w<', 'error')
+            return render_template('auth/register.html')
+        
+        # Validate passwords match
+        if password != password_confirm:
+            flash('Passwords must match! >w<', 'error')
+            return render_template('auth/register.html')
         
         if User.query.filter_by(email=email).first():
             flash('Email already registered >_<', 'error')
@@ -100,7 +111,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         
-        flash('Registration successful! Please log in ✨', 'success')
+        flash('Registration successful! Welcome aboard! ✨', 'success')
         return redirect(url_for('auth.login'))
         
     return render_template('auth/register.html')
@@ -109,40 +120,25 @@ def register():
 @login_required
 def setup_2fa():
     """Set up 2FA for user"""
-    if current_user.tf_totp_secret:
-        flash('2FA is already enabled! >w<', 'info')
-        return redirect(url_for('main.index'))
-        
-    if 'temp_secret' not in session:
-        # Generate new secret
-        session['temp_secret'] = pyotp.random_base32()
-        
     if request.method == 'POST':
         code = request.form.get('code')
-        totp = pyotp.TOTP(session['temp_secret'])
+        totp = pyotp.TOTP(current_user.tf_totp_secret)
         
-        if totp.verify(code):
-            current_user.tf_totp_secret = session['temp_secret']
-            db.session.commit()
-            session.pop('temp_secret')
-            flash('2FA has been enabled! Your account is now more secure! ✨', 'success')
-            return redirect(url_for('main.index'))
-            
-        flash('Invalid verification code >_<', 'error')
+        if not totp.verify(code):
+            flash('Invalid 2FA code >_<', 'error')
+            return render_template('auth/setup_2fa.html', qr_code=current_user.get_2fa_qr_code())
         
-    # Generate QR code
-    totp = pyotp.TOTP(session['temp_secret'])
-    provisioning_uri = totp.provisioning_uri(
-        current_user.email,
-        issuer_name='Retro Blog'
-    )
+        current_user.tf_enabled = True
+        db.session.commit()
+        flash('2FA enabled successfully! ✨', 'success')
+        return redirect(url_for('main.index'))
     
-    img = qrcode.make(provisioning_uri)
-    buffered = BytesIO()
-    img.save(buffered, format="PNG")
-    qr_code = base64.b64encode(buffered.getvalue()).decode()
+    # Generate new TOTP secret if not exists
+    if not current_user.tf_totp_secret:
+        current_user.tf_totp_secret = pyotp.random_base32()
+        db.session.commit()
     
-    return render_template('auth/setup_2fa.html', qr_code=qr_code)
+    return render_template('auth/setup_2fa.html', qr_code=current_user.get_2fa_qr_code())
 
 @auth_bp.route('/disable-2fa', methods=['POST'])
 @login_required

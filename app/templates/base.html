@@ -35,25 +35,18 @@
                     {% endif %}
                 </ul>
             </nav>
-
-            <div class="visitor-counter">
-                <img src="{{ url_for('static', filename='images/counter.gif') }}" alt="Visitor Counter">
-            </div>
-
-            <div class="badges">
-                <img src="{{ url_for('static', filename='images/best_viewed.gif') }}" alt="Best viewed with any browser">
-                <img src="{{ url_for('static', filename='images/under_construction.gif') }}" alt="Under Construction">
-            </div>
         </aside>
 
         <main class="content">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-                {% if messages %}
-                    {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
+            {% if not request.endpoint.startswith('admin_views') %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            {% endif %}
 
             {% block content %}{% endblock %}
         </main>
