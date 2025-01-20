@@ -1,0 +1,168 @@
+/* Auth Styles with Retro Vibes */
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 4rem);
+    padding: 2rem;
+}
+
+.auth-box {
+    background: white;
+    padding: 2rem;
+    border: 3px solid var(--primary);
+    box-shadow: 8px 8px 0 var(--accent);
+    max-width: 400px;
+    width: 100%;
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+.auth-box h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1.5rem;
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--text);
+}
+
+.auth-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.auth-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.auth-form input[type="email"],
+.auth-form input[type="password"],
+.auth-form input[type="text"] {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--text);
+    background: var(--background);
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+}
+
+.auth-form input:focus {
+    border-color: var(--primary);
+    outline: none;
+    box-shadow: 3px 3px 0 var(--accent);
+}
+
+.auth-form input:valid {
+    border-color: var(--secondary);
+}
+
+/* Checkbox styling */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 0.5rem;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.checkbox-label {
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+}
+
+/* Form actions */
+.form-actions {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.form-actions .btn {
+    margin: 0.5rem;
+}
+
+/* Auth links */
+.auth-links {
+    text-align: center;
+    margin-top: 2rem;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+}
+
+.auth-links a {
+    color: var(--primary);
+    text-decoration: none;
+    border-bottom: 2px dotted var(--primary);
+    transition: all 0.3s ease;
+}
+
+.auth-links a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* 2FA specific styles */
+.setup-2fa-instructions {
+    margin-bottom: 2rem;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+}
+
+.setup-2fa-instructions ol {
+    padding-left: 1.5rem;
+}
+
+.setup-2fa-instructions li {
+    margin-bottom: 0.5rem;
+}
+
+.qr-code-container {
+    text-align: center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background: white;
+    border: 2px solid var(--text);
+}
+
+.qr-code-container img {
+    max-width: 200px;
+    height: auto;
+}
+
+.setup-2fa-warning {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border: 2px solid #ffeeba;
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    color: #856404;
+}
+
+/* Responsive design */
+@media (max-width: 480px) {
+    .auth-box {
+        padding: 1.5rem;
+    }
+    
+    .auth-box h2 {
+        font-size: 1.2rem;
+    }
+    
+    .auth-form label {
+        font-size: 0.7rem;
+    }
+}

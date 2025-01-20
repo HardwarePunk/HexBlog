@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="blog-container">
+    <div class="welcome-banner">
+        <img src="{{ url_for('static', filename='images/star.gif') }}" alt="star">
+        <h1>✨ Welcome to My Super Cool Blog! ✨</h1>
+        <img src="{{ url_for('static', filename='images/star.gif') }}" alt="star">
+        <marquee scrollamount="3">🌟 Check out my awesome posts below! 🌟</marquee>
+    </div>
+
+    <div class="post-grid">
+        {% for post in posts.items %}
+            <div class="post-card">
+                <div class="post-card-header">
+                    <h2>📝 {{ post.title }}</h2>
+                    <span class="post-date">🗓️ {{ post.created_at|format_date }}</span>
+                </div>
+                <div class="post-card-preview">
+                    {{ post.content|truncate(150) }}
+                </div>
+                <div class="post-card-footer">
+                    <a href="{{ url_for('main.post', slug=post.slug) }}" class="btn btn-primary">
+                        Read More ✨
+                    </a>
+                    {% if post.tags %}
+                        <div class="post-tags">
+                            {% for tag in post.tags %}
+                                <span class="tag">🏷️ {{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <div class="no-posts">
+                <img src="{{ url_for('static', filename='images/construction.gif') }}" alt="Under Construction">
+                <p>No posts available yet! Check back soon! ✨</p>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="pagination">
+        {% if posts.has_prev %}
+            <a href="?page={{ posts.prev_num }}" class="btn btn-nav">
+                ⬅️ Previous Page
+            </a>
+        {% endif %}
+        
+        <span class="page-info">
+            Page {{ posts.page }} of {{ posts.pages }}
+        </span>
+        
+        {% if posts.has_next %}
+            <a href="?page={{ posts.next_num }}" class="btn btn-nav">
+                Next Page ➡️
+            </a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

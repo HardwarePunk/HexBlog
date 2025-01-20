@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-sidebar">
+        <h2>🚀 Admin Panel</h2>
+        <nav class="admin-nav">
+            <ul>
+                <li><a href="{{ url_for('admin_views.index') }}" class="{% if request.endpoint == 'admin_views.index' %}active{% endif %}">
+                    📊 Dashboard
+                </a></li>
+                <li><a href="{{ url_for('admin_views.posts') }}" class="{% if request.endpoint == 'admin_views.posts' %}active{% endif %}">
+                    📝 Posts
+                </a></li>
+                <li><a href="{{ url_for('admin_views.users') }}" class="{% if request.endpoint == 'admin_views.users' %}active{% endif %}">
+                    👥 Users
+                </a></li>
+                <li><a href="{{ url_for('main.index') }}">
+                    🏠 Back to Blog
+                </a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <div class="admin-content">
+        <div class="admin-header">
+            <h1>{% block admin_title %}Admin Panel{% endblock %}</h1>
+            {% block admin_actions %}{% endblock %}
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

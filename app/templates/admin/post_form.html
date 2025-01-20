@@ -1,0 +1,146 @@
+{% extends "admin/base.html" %}
+
+{% block extra_head %}
+    {{ super() }}
+    <!-- Quill -->
+    <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+    <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+    <style>
+        #editor-container {
+            height: 400px;
+        }
+        .ql-editor {
+            font-family: -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+    </style>
+{% endblock %}
+
+{% block admin_title %}✨ {{ "Edit Post" if post else "Create Post" }} ✨{% endblock %}
+
+{% block admin_content %}
+<div class="post-form-container">
+    <div class="post-form-box">
+        <form method="POST" class="post-form" id="post-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="content" id="hidden-content">
+            {% if post %}
+                <input type="hidden" name="original_title" value="{{ post.title }}">
+            {% endif %}
+            
+            <div class="form-group">
+                <label for="title">📝 Title</label>
+                <input type="text" id="title" name="title" required
+                       value="{{ post.title if post else '' }}"
+                       placeholder="Your awesome post title">
+            </div>
+            
+            <div class="form-group">
+                <label for="editor">✍️ Content</label>
+                <div id="editor-container"></div>
+            </div>
+            
+            <div class="form-group">
+                <label for="summary">📋 Summary</label>
+                <textarea id="summary" name="summary" rows="3"
+                          placeholder="A brief summary of your post">{{ post.summary if post else '' }}</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="tags">🏷️ Tags</label>
+                <input type="text" id="tags" name="tags" 
+                       value="{{ post.tags|join(', ') if post and post.tags else '' }}"
+                       placeholder="tag1, tag2, tag3">
+            </div>
+            
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_published" 
+                           {% if post and post.is_published %}checked{% endif %}>
+                    🌟 Publish immediately
+                </label>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    {{ "✨ Update Post" if post else "✨ Create Post" }}
+                </button>
+                
+                <a href="{{ url_for('admin_views.posts') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    var quill = new Quill('#editor-container', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                [{ 'script': 'sub'}, { 'script': 'super' }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        },
+        placeholder: 'Write your amazing post here...'
+    });
+
+    // Set initial content if editing
+    {% if post and post.content %}
+        quill.root.innerHTML = {{ post.content|tojson|safe }};
+    {% endif %}
+
+    // Handle form submission
+    document.getElementById('post-form').onsubmit = function() {
+        var content = document.getElementById('hidden-content');
+        content.value = quill.root.innerHTML;
+        return true;
+    };
+
+    // Handle image upload
+    quill.getModule('toolbar').addHandler('image', function() {
+        const input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+        input.click();
+
+        input.onchange = async () => {
+            const file = input.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('csrf_token', '{{ csrf_token() }}');
+
+                try {
+                    const response = await fetch('{{ url_for("admin_views.upload_image") }}', {
+                        method: 'POST',
+                        body: formData,
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        const error = await response.json();
+                        throw new Error(error.error || 'Upload failed');
+                    }
+
+                    const data = await response.json();
+                    const range = quill.getSelection(true);
+                    quill.insertEmbed(range.index, 'image', data.location);
+                } catch (error) {
+                    console.error('Error uploading image:', error);
+                    alert('Failed to upload image: ' + error.message);
+                }
+            }
+        };
+    });
+</script>
+{% endblock %}

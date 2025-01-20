@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Retro Blog✨{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <!-- Webring script (optional but very retro!) -->
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="page-container">
+        <!-- Retro sidebar with starry background -->
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>✨ Retro Blog ✨</h1>
+                <div class="brand-decoration">
+                    <marquee scrollamount="3">Welcome to my cool blog!</marquee>
+                </div>
+            </div>
+            
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="{{ url_for('main.index') }}">🏠 Home</a></li>
+                    <li><a href="{{ url_for('main.about') }}">👋 About</a></li>
+                    {% if current_user and current_user.is_authenticated %}
+                        {% if current_user.is_admin %}
+                            <li><a href="{{ url_for('admin_views.index') }}">⚙️ Admin</a></li>
+                        {% endif %}
+                        <li><a href="{{ url_for('auth.logout') }}">🚪 Logout ({{ current_user.email }})</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('auth.login') }}">🔑 Login</a></li>
+                    {% endif %}
+                </ul>
+            </nav>
+
+            <div class="visitor-counter">
+                <img src="{{ url_for('static', filename='images/counter.gif') }}" alt="Visitor Counter">
+            </div>
+
+            <div class="badges">
+                <img src="{{ url_for('static', filename='images/best_viewed.gif') }}" alt="Best viewed with any browser">
+                <img src="{{ url_for('static', filename='images/under_construction.gif') }}" alt="Under Construction">
+            </div>
+        </aside>
+
+        <main class="content">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <footer class="footer">
+        <p>Made with 💖 | <a href="#top">Back to Top</a></p>
+        <!-- Add your webring navigation here! -->
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

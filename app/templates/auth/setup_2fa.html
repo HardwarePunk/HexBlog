@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Setup 2FA - Retro Blog✨{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>✨ Setup 2FA ✨</h2>
+        
+        <div class="setup-2fa-instructions">
+            <p>Follow these steps to enable two-factor authentication:</p>
+            
+            <ol>
+                <li>Install an authenticator app like Google Authenticator or Authy on your phone 📱</li>
+                <li>Scan this QR code with your authenticator app 📷</li>
+                <li>Enter the 6-digit code from your app below to verify 🔢</li>
+            </ol>
+        </div>
+        
+        <div class="qr-code-container">
+            <img src="data:image/png;base64,{{ qr_code }}" alt="2FA QR Code">
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label for="code">Verification Code 🔐</label>
+                <input type="text" id="code" name="code" required
+                       placeholder="Enter 6-digit code"
+                       pattern="[0-9]{6}"
+                       title="Please enter a 6-digit code">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Verify and Enable 2FA ✨
+                </button>
+                
+                <a href="{{ url_for('main.index') }}" class="btn btn-secondary">
+                    Do This Later
+                </a>
+            </div>
+        </form>
+        
+        <div class="setup-2fa-warning">
+            <p>⚠️ Important: Store your backup codes in a safe place! If you lose access to your authenticator app, you'll need these to recover your account.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

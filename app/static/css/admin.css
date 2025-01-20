@@ -1,0 +1,217 @@
+/* Admin Panel Styles with Retro Twist */
+.admin-container {
+    display: flex;
+    background: white;
+    border: 3px solid var(--primary);
+    box-shadow: 5px 5px 0 var(--accent);
+    margin: -2rem;  /* Offset parent padding */
+    min-height: calc(100vh - 4rem);
+}
+
+/* Admin Sidebar */
+.admin-sidebar {
+    width: 200px;
+    background: var(--text);
+    padding: 1rem;
+    color: white;
+}
+
+.admin-sidebar h2 {
+    font-family: 'Press Start 2P', cursive;
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: var(--accent);
+}
+
+.admin-nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-nav a {
+    display: block;
+    padding: 0.8rem;
+    color: white;
+    text-decoration: none;
+    border: 2px solid transparent;
+    margin-bottom: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.admin-nav a:hover, .admin-nav a.active {
+    border: 2px solid var(--accent);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+/* Admin Content */
+.admin-content {
+    flex: 1;
+    padding: 2rem;
+    background: var(--background);
+}
+
+/* Dashboard Cards */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.dashboard-card {
+    background: white;
+    padding: 1.5rem;
+    border: 3px solid var(--primary);
+    box-shadow: 3px 3px 0 var(--accent);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+}
+
+.card-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.card-value {
+    font-size: 2rem;
+    font-family: 'Press Start 2P', cursive;
+    color: var(--primary);
+}
+
+/* Tables */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background: white;
+    border: 3px solid var(--primary);
+}
+
+.admin-table th {
+    background: var(--text);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+}
+
+.status-badge {
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.status-badge.published {
+    background: #a8e6cf;
+    color: #2d3436;
+}
+
+.status-badge.draft {
+    background: #ffd3b6;
+    color: #2d3436;
+}
+
+/* Forms */
+.admin-form {
+    background: white;
+    padding: 2rem;
+    border: 3px solid var(--primary);
+    box-shadow: 5px 5px 0 var(--accent);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    color: var(--text);
+}
+
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid var(--text);
+    background: var(--background);
+    font-family: 'VT323', monospace;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group textarea:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--text);
+    background: var(--primary);
+    color: white;
+    text-decoration: none;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 2px 0 var(--text);
+}
+
+.btn-secondary {
+    background: var(--text);
+}
+
+.btn-danger {
+    background: #ff6b6b;
+}
+
+.btn-edit {
+    background: var(--secondary);
+}
+
+.btn-view {
+    background: var(--accent);
+    color: var(--text);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .admin-container {
+        flex-direction: column;
+    }
+    
+    .admin-sidebar {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-card {
+        margin-bottom: 1rem;
+    }
+    
+    .admin-table {
+        font-size: 0.9rem;
+    }
+}

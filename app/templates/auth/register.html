@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Register - Retro Blog✨{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>✨ Register ✨</h2>
+        
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label for="email">Email Address 📧</label>
+                <input type="email" id="email" name="email" required
+                       placeholder="your@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="username">Username 👤</label>
+                <input type="text" id="username" name="username" required
+                       placeholder="Choose a cool username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password 🔒</label>
+                <input type="password" id="password" name="password" required
+                       placeholder="Choose a strong password"
+                       pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+                       title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters">
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password 🔒</label>
+                <input type="password" id="confirm_password" name="confirm_password" required
+                       placeholder="Confirm your password">
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Register ✨
+                </button>
+            </div>
+        </form>
+        
+        <div class="auth-links">
+            <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login here!</a></p>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+document.getElementById('confirm_password').addEventListener('input', function() {
+    if (this.value !== document.getElementById('password').value) {
+        this.setCustomValidity('Passwords must match >w<');
+    } else {
+        this.setCustomValidity('');
+    }
+});
+</script>
+{% endblock %}
+{% endblock %}

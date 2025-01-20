@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=wsgi.py
+      - FLASK_ENV=development
+      - DATABASE_URL=sqlite:///test.db
+      - SECRET_KEY=dev-key-for-testing
+      - SECURITY_PASSWORD_SALT=dev-salt-for-testing
+    command: flask run --host=0.0.0.0
+
+  test:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=wsgi.py
+      - FLASK_ENV=testing
+      - DATABASE_URL=sqlite:///test.db
+      - SECRET_KEY=test-key
+      - SECURITY_PASSWORD_SALT=test-salt

@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block admin_title %}Users{% endblock %}
+
+{% block admin_content %}
+<div class="table-responsive">
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Status</th>
+                <th>Joined</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users.items %}
+            <tr>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>
+                    {% for role in user.roles %}
+                        <span class="role-badge">{{ role.name }}</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {% if user.active %}
+                        <span class="status-badge active">Active</span>
+                    {% else %}
+                        <span class="status-badge inactive">Inactive</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.created_at|format_date }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if users.pages > 1 %}
+<div class="pagination">
+    {% if users.has_prev %}
+        <a href="{{ url_for('admin_views.users', page=users.prev_num) }}" class="btn">&laquo; Previous</a>
+    {% endif %}
+    
+    <span class="current-page">Page {{ users.page }} of {{ users.pages }}</span>
+    
+    {% if users.has_next %}
+        <a href="{{ url_for('admin_views.users', page=users.next_num) }}" class="btn">Next &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+
+{% block admin_title %}Dashboard{% endblock %}
+
+{% block admin_content %}
+<div class="dashboard-grid">
+    <div class="dashboard-card">
+        <div class="card-icon">📝</div>
+        <div class="card-content">
+            <h3>Total Posts</h3>
+            <p class="card-value">{{ post_count }}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-icon">📋</div>
+        <div class="card-content">
+            <h3>Draft Posts</h3>
+            <p class="card-value">{{ draft_count }}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="card-icon">👥</div>
+        <div class="card-content">
+            <h3>Total Users</h3>
+            <p class="card-value">{{ user_count }}</p>
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-section">
+    <h2>Recent Posts</h2>
+    <div class="table-responsive">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Status</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in recent_posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.author.username }}</td>
+                    <td>
+                        {% if post.is_published %}
+                            <span class="status-badge published">Published</span>
+                        {% else %}
+                            <span class="status-badge draft">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ post.created_at|format_date }}</td>
+                    <td class="actions">
+                        <a href="{{ url_for('admin_views.edit_post', id=post.id) }}" class="btn btn-edit">Edit</a>
+                        <a href="{{ url_for('main.post', slug=post.slug) }}" class="btn btn-view">View</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
