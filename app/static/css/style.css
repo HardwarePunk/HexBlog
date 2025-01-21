@@ -118,6 +118,17 @@ body {
     margin-right: 1rem;
 }
 
+/* Post Card Styles */
+.post-card-preview {
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    margin: 0.5rem 0;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #333;
+}
+
 /* Retro buttons */
 .read-more {
     display: inline-block;
@@ -134,6 +145,32 @@ body {
     background: var(--accent);
     transform: translate(2px, 2px);
     box-shadow: 1px 1px 0 black;
+}
+
+/* Form Help Text */
+.field-help {
+    font-size: 0.9em;
+    color: #666;
+    margin: 0.2rem 0 0.5rem;
+    font-style: italic;
+}
+
+/* Summary Field */
+#summary {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    line-height: 1.4;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+}
+
+#summary:focus {
+    border-color: #ff69b4;
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
 }
 
 /* Pagination */

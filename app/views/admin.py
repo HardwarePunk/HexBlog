@@ -58,7 +58,7 @@ def new_post():
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
         summary = request.form.get('summary', '').strip()
-        is_published = bool(request.form.get('is_published'))
+        is_published = request.form.get('is_published')
         
         # Validate required fields
         if not title:
@@ -76,7 +76,21 @@ def new_post():
                                 content=content, 
                                 summary=summary, 
                                 is_published=is_published)
-        
+
+        # Validate summary length
+        if summary and len(summary) > 500:
+            flash('Summary must be less than 500 characters! >w<', 'error')
+            return render_template('admin/post_form.html',
+                                title=title,
+                                content=content,
+                                summary=summary,
+                                is_published=is_published)
+
+        # Handle summary
+        if not summary:
+            # Let the model handle auto-generation
+            summary = None
+            
         # Generate and validate slug
         slug = Post.generate_slug(title)
         existing_post = Post.query.filter_by(slug=slug).first()
@@ -85,16 +99,22 @@ def new_post():
             while Post.query.filter_by(slug=slug).first():
                 slug = slug.rsplit('-', 1)[0] + '-' + str(int(slug.rsplit('-', 1)[1]) + 1)
         
+        # Create new post
         post = Post(
             title=title,
             content=content,
             summary=summary,
             slug=slug,
             author=current_user,
-            is_published=is_published
+            is_published=False  # Start as unpublished
         )
         
         db.session.add(post)
+        
+        # Handle publishing if requested
+        if is_published == 'true':  # Form data is string
+            post.publish()
+            
         db.session.commit()
         
         flash('Post created successfully! ✨', 'success')
@@ -114,7 +134,7 @@ def edit_post(id):
         content = request.form.get('content', '').strip()
         summary = request.form.get('summary', '').strip()
         original_title = request.form.get('original_title')
-        is_published = bool(request.form.get('is_published'))
+        is_published = request.form.get('is_published')
         
         # Validate required fields
         if not title:
@@ -124,13 +144,22 @@ def edit_post(id):
         if not content:
             flash('Content is required! >w<', 'error')
             return render_template('admin/post_form.html', post=post)
-        
-        # Handle publishing state change
-        if is_published and not post.is_published:
-            post.publish()
-        elif not is_published and post.is_published:
-            post.unpublish()
+
+        # Validate summary length
+        if summary and len(summary) > 500:
+            flash('Summary must be less than 500 characters! >w<', 'error')
+            return render_template('admin/post_form.html',
+                                title=title,
+                                content=content,
+                                summary=summary,
+                                is_published=is_published)
+
+        # Handle summary
+        if not summary:
+            # Let the model handle auto-generation
+            summary = None
             
+        # Update post
         post.title = title
         post.content = content
         post.summary = summary
@@ -142,6 +171,12 @@ def edit_post(id):
                 flash('Slug already exists! Please choose a different title! uwu', 'error')
                 return render_template('admin/post_form.html', post=post)
         
+        # Handle publishing state change
+        if is_published == 'true' and not post.is_published:
+            post.publish()
+        elif is_published != 'true' and post.is_published:
+            post.unpublish()
+            
         db.session.commit()
         flash('Post updated successfully! 🌟', 'success')
         return redirect(url_for('admin_views.posts'))

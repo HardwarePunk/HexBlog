@@ -9,7 +9,7 @@ class Post(db.Model):
     title = db.Column(db.String(255), nullable=False)
     slug = db.Column(db.String(255), unique=True, nullable=False)
     content = db.Column(db.Text, nullable=False)
-    summary = db.Column(db.String(500))
+    _summary = db.Column('summary', db.String(500))
     
     # Post status
     is_published = db.Column(db.Boolean, default=False)
@@ -61,9 +61,26 @@ class Post(db.Model):
     def publish(self):
         """Publish the post"""
         self.is_published = True
-        self.published_at = datetime.utcnow()
+        if not self.published_at:  # Only set published_at if not already set
+            self.published_at = datetime.utcnow()
         
     def unpublish(self):
         """Unpublish the post"""
         self.is_published = False
         self.published_at = None
+
+    @property
+    def summary(self):
+        return self._summary
+
+    @summary.setter
+    def summary(self, value):
+        """Set the summary, auto-generating if not provided"""
+        if value:
+            self._summary = value
+        else:
+            # Auto-generate summary from content
+            if len(self.content) > 200:
+                self._summary = self.content[:197] + '...'
+            else:
+                self._summary = self.content

@@ -15,7 +15,11 @@
                     <span class="post-date">🗓️ {{ post.created_at|format_date }}</span>
                 </div>
                 <div class="post-card-preview">
-                    {{ post.content|truncate(150) }}
+                    {% if post.summary %}
+                        {{ post.summary }}
+                    {% else %}
+                        {{ post.content[:200] + '...' if post.content|length > 200 else post.content }}
+                    {% endif %}
                 </div>
                 <div class="post-card-footer">
                     <a href="{{ url_for('main.post', slug=post.slug) }}" class="btn btn-primary">
