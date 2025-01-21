@@ -3,15 +3,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 4rem);
-    padding: 2rem;
+    min-height: calc(100vh - calc(2 * var(--spacing-lg)));
+    padding: var(--spacing-lg);
 }
 
 .auth-box {
-    background: white;
-    padding: 2rem;
-    border: 3px solid var(--primary);
-    box-shadow: 8px 8px 0 var(--accent);
+    background: var(--color-white);
+    padding: var(--spacing-lg);
+    border: var(--border-width-thick) solid var(--color-primary);
+    box-shadow: 8px 8px 0 var(--color-accent);
     max-width: 400px;
     width: 100%;
     position: relative;
@@ -25,45 +25,45 @@
 }
 
 .auth-box h2 {
-    font-family: 'Press Start 2P', cursive;
-    font-size: 1.5rem;
+    font-family: var(--font-display);
+    font-size: var(--font-size-large);
     text-align: center;
-    margin-bottom: 2rem;
-    color: var(--text);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text);
 }
 
 .auth-form .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--spacing-md);
 }
 
 .auth-form label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-family: 'Press Start 2P', cursive;
-    font-size: 0.8rem;
-    color: var(--text);
+    margin-bottom: var(--spacing-xs);
+    font-family: var(--font-display);
+    font-size: var(--font-size-small);
+    color: var(--color-text);
 }
 
 .auth-form input[type="email"],
 .auth-form input[type="password"],
 .auth-form input[type="text"] {
     width: 100%;
-    padding: 0.8rem;
-    border: 2px solid var(--text);
-    background: var(--background);
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
+    padding: var(--spacing-sm);
+    border: var(--border-width) solid var(--color-text);
+    background: var(--color-background);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .auth-form input:focus {
-    border-color: var(--primary);
+    border-color: var(--color-primary);
     outline: none;
-    box-shadow: 3px 3px 0 var(--accent);
+    box-shadow: var(--shadow-small);
 }
 
 .auth-form input:valid {
-    border-color: var(--secondary);
+    border-color: var(--color-secondary);
 }
 
 /* Checkbox styling */
@@ -74,67 +74,67 @@
 }
 
 .checkbox-container input[type="checkbox"] {
-    margin-right: 0.5rem;
+    margin-right: var(--spacing-xs);
     width: 1.2rem;
     height: 1.2rem;
 }
 
 .checkbox-label {
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
 }
 
 /* Form actions */
 .form-actions {
     text-align: center;
-    margin-top: 2rem;
+    margin-top: var(--spacing-lg);
 }
 
 .form-actions .btn {
-    margin: 0.5rem;
+    margin: var(--spacing-xs);
 }
 
 /* Auth links */
 .auth-links {
     text-align: center;
-    margin-top: 2rem;
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
+    margin-top: var(--spacing-lg);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
 }
 
 .auth-links a {
-    color: var(--primary);
+    color: var(--color-primary);
     text-decoration: none;
-    border-bottom: 2px dotted var(--primary);
-    transition: all 0.3s ease;
+    border-bottom: var(--border-width) dotted var(--color-primary);
+    transition: all var(--transition-speed) var(--transition-timing);
 }
 
 .auth-links a:hover {
-    color: var(--accent);
-    border-bottom-color: var(--accent);
+    color: var(--color-accent);
+    border-bottom-color: var(--color-accent);
 }
 
 /* 2FA specific styles */
 .setup-2fa-instructions {
-    margin-bottom: 2rem;
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
+    margin-bottom: var(--spacing-lg);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
 }
 
 .setup-2fa-instructions ol {
-    padding-left: 1.5rem;
+    padding-left: var(--spacing-md);
 }
 
 .setup-2fa-instructions li {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--spacing-xs);
 }
 
 .qr-code-container {
     text-align: center;
-    margin: 2rem 0;
-    padding: 1rem;
-    background: white;
-    border: 2px solid var(--text);
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-sm);
+    background: var(--color-white);
+    border: var(--border-width) solid var(--color-text);
 }
 
 .qr-code-container img {
@@ -143,26 +143,26 @@
 }
 
 .setup-2fa-warning {
-    margin-top: 2rem;
-    padding: 1rem;
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-sm);
     background: #fff3cd;
-    border: 2px solid #ffeeba;
-    font-family: 'VT323', monospace;
-    font-size: 1.1rem;
+    border: var(--border-width) solid #ffeeba;
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
     color: #856404;
 }
 
 /* Responsive design */
 @media (max-width: 480px) {
     .auth-box {
-        padding: 1.5rem;
+        padding: var(--spacing-md);
     }
     
     .auth-box h2 {
-        font-size: 1.2rem;
+        font-size: var(--font-size-base);
     }
     
     .auth-form label {
-        font-size: 0.7rem;
+        font-size: var(--font-size-small);
     }
 }

@@ -24,7 +24,6 @@
             <nav class="main-nav">
                 <ul>
                     <li><a href="{{ url_for('main.index') }}">🏠 Home</a></li>
-                    <li><a href="{{ url_for('main.about') }}">👋 About</a></li>
                     {% if current_user and current_user.is_authenticated %}
                         {% if current_user.is_admin %}
                             <li><a href="{{ url_for('admin_views.index') }}">⚙️ Admin</a></li>
