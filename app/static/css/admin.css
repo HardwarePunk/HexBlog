@@ -1,7 +1,7 @@
 /* Admin Panel Styles with Retro Twist */
 .admin-container {
     display: flex;
-    background: var(--color-white);
+    background: var(--color-surface);
     border: var(--border-width-thick) solid var(--color-primary);
     box-shadow: var(--shadow-medium);
     margin: calc(-1 * var(--spacing-lg));  /* Offset parent padding */
@@ -11,9 +11,9 @@
 /* Admin Sidebar */
 .admin-sidebar {
     width: 200px;
-    background: var(--color-text);
+    background: var(--color-gray-dark);
     padding: var(--spacing-sm);
-    color: var(--color-white);
+    color: var(--color-text);
 }
 
 .admin-sidebar h2 {
@@ -22,6 +22,7 @@
     margin-bottom: var(--spacing-lg);
     text-align: center;
     color: var(--color-accent);
+    text-shadow: 2px 2px var(--color-primary);
 }
 
 .admin-nav ul {
@@ -32,7 +33,7 @@
 .admin-nav a {
     display: block;
     padding: var(--spacing-sm);
-    color: var(--color-white);
+    color: var(--color-text);
     text-decoration: none;
     border: var(--border-width) solid transparent;
     margin-bottom: var(--spacing-xs);
@@ -41,7 +42,7 @@
 
 .admin-nav a:hover, .admin-nav a.active {
     border: var(--border-width) solid var(--color-accent);
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--color-gray-medium);
     transform: translateX(5px);
 }
 
@@ -61,7 +62,7 @@
 }
 
 .dashboard-card {
-    background: var(--color-white);
+    background: var(--color-surface);
     padding: var(--spacing-md);
     border: var(--border-width-thick) solid var(--color-primary);
     box-shadow: var(--shadow-small);
@@ -76,6 +77,7 @@
 .card-icon {
     font-size: var(--font-size-large);
     margin-bottom: var(--spacing-sm);
+    color: var(--color-accent);
 }
 
 .card-value {
@@ -89,13 +91,13 @@
     width: 100%;
     border-collapse: collapse;
     margin-top: var(--spacing-sm);
-    background: var(--color-white);
+    background: var(--color-surface);
     border: var(--border-width-thick) solid var(--color-primary);
 }
 
 .admin-table th {
-    background: var(--color-text);
-    color: var(--color-white);
+    background: var(--color-gray-dark);
+    color: var(--color-text);
     padding: var(--spacing-sm);
     text-align: left;
     font-family: var(--font-display);
@@ -114,18 +116,18 @@
 }
 
 .status-badge.published {
-    background: #a8e6cf;
-    color: var(--color-gray-dark);
+    background: var(--color-success-dark);
+    color: var(--color-text);
 }
 
 .status-badge.draft {
-    background: #ffd3b6;
-    color: var(--color-gray-dark);
+    background: var(--color-accent);
+    color: var(--color-text);
 }
 
 /* Forms */
 .admin-form {
-    background: var(--color-white);
+    background: var(--color-surface);
     padding: var(--spacing-lg);
     border: var(--border-width-thick) solid var(--color-primary);
     box-shadow: var(--shadow-medium);
@@ -147,8 +149,9 @@
 .form-group textarea {
     width: 100%;
     padding: var(--spacing-sm);
-    border: var(--border-width) solid var(--color-text);
+    border: var(--border-width) solid var(--color-gray-light);
     background: var(--color-background);
+    color: var(--color-text);
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
     transition: border-color var(--transition-speed) var(--transition-timing);
@@ -164,9 +167,9 @@
 .btn {
     display: inline-block;
     padding: var(--spacing-xs) var(--spacing-sm);
-    border: var(--border-width) solid var(--color-text);
+    border: var(--border-width) solid var(--color-black);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-text);
     text-decoration: none;
     font-family: var(--font-display);
     font-size: var(--font-size-small);
@@ -180,11 +183,11 @@
 }
 
 .btn-secondary {
-    background: var(--color-text);
+    background: var(--color-secondary);
 }
 
 .btn-danger {
-    background: var(--color-primary);
+    background: var(--color-accent);
 }
 
 .btn-edit {
@@ -192,7 +195,7 @@
 }
 
 .btn-view {
-    background: var(--color-accent);
+    background: var(--color-success-dark);
     color: var(--color-text);
 }
 

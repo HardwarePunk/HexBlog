@@ -1,16 +1,20 @@
 /* Retro color palette and theme variables */
 :root {
     /* Colors */
-    --color-primary: #ff6b6b;
-    --color-secondary: #4ecdc4;
-    --color-background: #f7f7f7;
-    --color-text: #2c3e50;
-    --color-accent: #ffbe0b;
+    --color-primary: #ef3e9c;
+    --color-secondary: #bc5090;
+    --color-background: #003f5c;
+    --color-surface: #004b6e;
+    --color-text: #ffffff;
+    --color-text-muted: #aaaaaa;
+    --color-accent: #ff6361;
     --color-white: #ffffff;
     --color-black: #000000;
-    --color-gray-light: #f0f0f0;
-    --color-gray-medium: #666666;
-    --color-gray-dark: #333333;
+    --color-gray-light: #2a4d5f;
+    --color-gray-medium: #1e3a4a;
+    --color-gray-dark: #0e2838;
+    --color-success: #aaffb8;
+    --color-success-dark: #88cc94;
 
     /* Typography */
     --font-primary: 'VT323', monospace;
@@ -35,8 +39,8 @@
 
     /* Effects */
     --shadow-small: 3px 3px 0 var(--color-black);
-    --shadow-medium: 5px 5px 0 var(--color-accent);
-    --shadow-large: 5px 0 15px rgba(0, 0, 0, 0.2);
+    --shadow-medium: 5px 5px 0 var(--color-secondary);
+    --shadow-large: 5px 0 15px rgba(0, 0, 0, 0.4);
     
     /* Transitions */
     --transition-speed: 0.3s;
@@ -66,10 +70,10 @@ body {
 /* Retro sidebar */
 .sidebar {
     width: var(--sidebar-width);
-    background: rgba(0, 0, 0, 0.8);
+    background: var(--color-gray-dark);
     position: fixed;
     height: 100vh;
-    color: var(--color-white);
+    color: var(--color-text);
     border-right: var(--border-width-thick) solid var(--color-primary);
     box-shadow: var(--shadow-large);
 }
@@ -103,7 +107,7 @@ body {
 .main-nav a {
     display: block;
     padding: var(--spacing-xs);
-    color: var(--color-white);
+    color: var(--color-text);
     text-decoration: none;
     transition: all var(--transition-speed) var(--transition-timing);
     border: var(--border-width) solid transparent;
@@ -124,7 +128,7 @@ body {
 
 /* Post cards */
 .post-card {
-    background: var(--color-white);
+    background: var(--color-surface);
     padding: var(--spacing-md);
     margin-bottom: var(--spacing-lg);
     border: var(--border-width-thick) solid var(--color-primary);
@@ -149,7 +153,7 @@ body {
 
 .post-meta {
     font-size: var(--font-size-small);
-    color: var(--color-gray-medium);
+    color: var(--color-text-muted);
     margin-bottom: var(--spacing-sm);
 }
 
@@ -160,12 +164,12 @@ body {
 /* Post Card Styles */
 .post-card-preview {
     padding: var(--spacing-sm);
-    background: rgba(255, 255, 255, 0.9);
+    background: var(--color-gray-medium);
     border-radius: var(--border-radius);
     margin: var(--spacing-xs) 0;
     font-size: var(--font-size-base);
     line-height: var(--line-height-base);
-    color: var(--color-gray-dark);
+    color: var(--color-text);
 }
 
 /* Retro buttons */
@@ -173,7 +177,7 @@ body {
     display: inline-block;
     padding: var(--spacing-xs) var(--spacing-sm);
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--color-text);
     text-decoration: none;
     border: var(--border-width) solid var(--color-black);
     box-shadow: var(--shadow-small);
@@ -243,6 +247,17 @@ body {
 .badges img {
     margin: var(--spacing-xs);
     max-width: 88px;
+}
+
+/* Status badges */
+.status-badge.published {
+    background: var(--color-success-dark);
+    color: var(--color-text);
+}
+
+.status-badge.draft {
+    background: var(--color-accent);
+    color: var(--color-text);
 }
 
 /* Responsive design */
