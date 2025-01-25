@@ -1,4 +1,4 @@
-# Retro Blog 
+# Hex Blag
 
 A geocities-inspired blog platform built with Flask, featuring:
 - Secure authentication with 2FA
@@ -6,6 +6,33 @@ A geocities-inspired blog platform built with Flask, featuring:
 - Retro-styled interface
 - Admin dashboard
 - Image upload support
+
+## ✨ Features
+
+### Security & Authentication
+- 🔒 Secure user authentication with password hashing
+- 🔑 Two-factor authentication (2FA) support
+- 🛡️ CSRF protection and rate limiting
+- 👥 Admin approval system for new accounts
+
+### Content Management
+- 📝 WYSIWYG editor for posts with Markdown support
+- 📸 Image upload and management
+- 📋 Automatic post summary generation
+- 🏷️ Automatic SEO-friendly slug generation
+- 📦 Draft post support with publishing workflow
+
+### Community Features
+- 💬 Commenting system with moderation
+- 👤 User profiles
+- 🎨 Retro-styled interface with consistent theming
+- 📱 Mobile-responsive design
+
+### Admin Features
+- 🎛️ Admin dashboard for content management
+- 👥 User management with approval controls
+- 📊 Post analytics (views, comments)
+- 🔍 Content moderation tools
 
 ## Setup
 
@@ -101,11 +128,3 @@ To see test coverage:
 ```bash
 pytest --cov=app tests/
 ```
-
-## Features
-- Retro-styled blog interface
-- Secure admin panel
-- Two-factor authentication
-- WYSIWYG post editor
-- Image upload and management
-- Responsive design
