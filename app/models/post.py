@@ -1,5 +1,5 @@
 from app import db
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy.ext.hybrid import hybrid_property
 import re
 
@@ -20,20 +20,25 @@ class Post(db.Model):
     meta_keywords = db.Column(db.String(255))
     
     # Timestamps
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=datetime.now(timezone.utc), onupdate=datetime.now(timezone.utc))
     published_at = db.Column(db.DateTime, nullable=True)
     
     # Relationships
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    author = db.relationship('User', back_populates='posts')
+    comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
     
     def __init__(self, *args, **kwargs):
         is_published = kwargs.pop('is_published', False)
         super().__init__(*args, **kwargs)
         if is_published:
-            self.published_at = datetime.utcnow()
+            self.published_at = datetime.now(timezone.utc)
             
     def __str__(self):
+        return f'<Post {self.title}>'
+    
+    def __repr__(self):
         return f'<Post {self.title}>'
     
     @hybrid_property
@@ -62,7 +67,7 @@ class Post(db.Model):
         """Publish the post"""
         self.is_published = True
         if not self.published_at:  # Only set published_at if not already set
-            self.published_at = datetime.utcnow()
+            self.published_at = datetime.now(timezone.utc)
         
     def unpublish(self):
         """Unpublish the post"""

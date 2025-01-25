@@ -10,6 +10,7 @@ from dotenv import load_dotenv
 import os
 from datetime import datetime
 from sqlalchemy.orm import joinedload
+from app.utils.filters import format_datetime
 
 # Load environment variables
 load_dotenv()
@@ -97,6 +98,9 @@ def create_app(test_config=None):
         if not value:
             return ''
         return value.strftime('%B %d, %Y')
+    
+    # Register datetime filter
+    app.jinja_env.filters['datetime'] = format_datetime
     
     # Register blueprints
     from app.views.auth import auth_bp

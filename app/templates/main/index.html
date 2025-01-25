@@ -11,7 +11,9 @@
         {% for post in posts.items %}
             <div class="post-card">
                 <div class="post-card-header">
-                    <h2>📝 {{ post.title }}</h2>
+                    <h2 class="post-title">
+                        <a href="{{ url_for('main.post_detail', slug=post.slug) }}">{{ post.title }}</a>
+                    </h2>
                     <span class="post-date">🗓️ {{ post.created_at|format_date }}</span>
                 </div>
                 <div class="post-card-preview">
@@ -22,7 +24,7 @@
                     {% endif %}
                 </div>
                 <div class="post-card-footer">
-                    <a href="{{ url_for('main.post', slug=post.slug) }}" class="btn btn-primary">
+                    <a href="{{ url_for('main.post_detail', slug=post.slug) }}" class="btn btn-primary">
                         Read More ✨
                     </a>
                     {% if post.tags %}

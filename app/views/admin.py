@@ -68,7 +68,7 @@ def new_post():
         title = request.form.get('title', '').strip()
         content = request.form.get('content', '').strip()
         summary = request.form.get('summary', '').strip()
-        is_published = request.form.get('is_published')
+        is_published = request.form.get('is_published') == 'true'
         
         # Validate required fields
         if not title:
@@ -101,33 +101,22 @@ def new_post():
             # Let the model handle auto-generation
             summary = None
             
-        # Generate and validate slug
-        slug = Post.generate_slug(title)
-        existing_post = Post.query.filter_by(slug=slug).first()
-        if existing_post:
-            slug += '-1'
-            while Post.query.filter_by(slug=slug).first():
-                slug = slug.rsplit('-', 1)[0] + '-' + str(int(slug.rsplit('-', 1)[1]) + 1)
-        
-        # Create new post
+        # Create post
         post = Post(
             title=title,
             content=content,
             summary=summary,
-            slug=slug,
             author=current_user,
-            is_published=False  # Start as unpublished
+            is_published=is_published
         )
         
-        db.session.add(post)
-        
-        # Handle publishing if requested
-        if is_published == 'true':  # Form data is string
+        if is_published:
             post.publish()
             
+        db.session.add(post)
         db.session.commit()
         
-        flash('Post created successfully! ✨', 'success')
+        flash('Post created successfully! 🌟', 'success')
         return redirect(url_for('admin_views.posts'))
         
     return render_template('admin/post_form.html')
@@ -144,7 +133,7 @@ def edit_post(id):
         content = request.form.get('content', '').strip()
         summary = request.form.get('summary', '').strip()
         original_title = request.form.get('original_title')
-        is_published = request.form.get('is_published')
+        is_published = request.form.get('is_published') == 'true'
         
         # Validate required fields
         if not title:
@@ -182,9 +171,9 @@ def edit_post(id):
                 return render_template('admin/post_form.html', post=post)
         
         # Handle publishing state change
-        if is_published == 'true' and not post.is_published:
+        if is_published and not post.is_published:
             post.publish()
-        elif is_published != 'true' and post.is_published:
+        elif not is_published and post.is_published:
             post.unpublish()
             
         db.session.commit()
@@ -202,6 +191,28 @@ def delete_post(id):
     db.session.delete(post)
     db.session.commit()
     flash('Post deleted successfully! 💫', 'success')
+    return redirect(url_for('admin_views.posts'))
+
+@admin_bp.route('/post/<int:id>/publish', methods=['POST'])
+@login_required
+@admin_required
+def publish_post(id):
+    """Publish a post"""
+    post = Post.query.get_or_404(id)
+    post.publish()
+    db.session.commit()
+    flash('Post published successfully! 🌟', 'success')
+    return redirect(url_for('admin_views.posts'))
+
+@admin_bp.route('/post/<int:id>/unpublish', methods=['POST'])
+@login_required
+@admin_required
+def unpublish_post(id):
+    """Unpublish a post"""
+    post = Post.query.get_or_404(id)
+    post.unpublish()
+    db.session.commit()
+    flash('Post unpublished successfully! 🌟', 'success')
     return redirect(url_for('admin_views.posts'))
 
 @admin_bp.route('/users')

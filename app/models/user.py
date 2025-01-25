@@ -1,6 +1,6 @@
 from app import db
 from flask_security import UserMixin, RoleMixin
-from datetime import datetime
+from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import qrcode
@@ -47,14 +47,13 @@ class User(db.Model, UserMixin):
     registration_enabled = db.Column(db.Boolean(), default=False, server_default='0')
     
     # Timestamps
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc))
+    updated_at = db.Column(db.DateTime, default=lambda: datetime.now(timezone.utc), onupdate=lambda: datetime.now(timezone.utc))
     
     # Relationships
-    roles = db.relationship('Role', secondary=roles_users,
-                          backref=db.backref('users', lazy='dynamic'))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
-
+    posts = db.relationship('Post', back_populates='author', cascade='all, delete-orphan')
+    comments = db.relationship('Comment', back_populates='author', cascade='all, delete-orphan')
+    roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     # Add fs_uniquifier attribute
     fs_uniquifier = db.Column(db.String(255), unique=True, nullable=False, default=lambda: str(uuid.uuid4()))
 

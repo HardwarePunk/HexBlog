@@ -1,6 +1,10 @@
-from flask import Blueprint, render_template, request, current_app, flash, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import current_user, login_required
 from app.models.post import Post
+from app.models.comment import Comment
 from app.models.user import User
+from app.models.forms import CommentForm
+from app import db
 
 main_bp = Blueprint('main', __name__)
 
@@ -16,7 +20,7 @@ def index():
     return render_template('main/index.html', posts=posts)
 
 @main_bp.route('/post/<string:slug>')
-def post(slug):
+def post_detail(slug):
     """Individual blog post page"""
     # Only show published posts
     post = Post.query.filter(
@@ -24,7 +28,45 @@ def post(slug):
         Post.is_published == True,
         Post.published_at.isnot(None)
     ).first_or_404()
-    return render_template('main/post.html', post=post)
+    comment_form = CommentForm()
+    return render_template('main/post.html', post=post, comment_form=comment_form)
+
+@main_bp.route('/post/<int:post_id>/comment', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    """Add a comment to a post"""
+    post = Post.query.get_or_404(post_id)
+    form = CommentForm()
+    
+    if form.validate_on_submit():
+        comment = Comment(
+            content=form.content.data,
+            post=post,
+            author=current_user
+        )
+        db.session.add(comment)
+        db.session.commit()
+        flash('Comment added successfully! ✨', 'success')
+    else:
+        flash('Invalid comment! >_<', 'error')
+    
+    return redirect(url_for('main.post_detail', slug=post.slug))
+
+@main_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
+@login_required
+def delete_comment(comment_id):
+    """Delete a comment"""
+    comment = Comment.query.get_or_404(comment_id)
+    
+    if comment.author != current_user:
+        flash('You can only delete your own comments! >_<', 'error')
+        return redirect(url_for('main.post_detail', slug=comment.post.slug))
+    
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted successfully! ✨', 'success')
+    
+    return redirect(url_for('main.post_detail', slug=comment.post.slug))
 
 @main_bp.route('/about')
 def about():
