@@ -33,12 +33,18 @@ class User(db.Model, UserMixin):
     tf_phone_number = db.Column(db.String(128))
     tf_primary_method = db.Column(db.String(64))
     tf_totp_secret = db.Column(db.String(255))
+    tf_enabled = db.Column(db.Boolean, default=False)
+    backup_codes = db.Column(db.JSON)
     
     # Profile fields
     display_name = db.Column(db.String(255))
     bio = db.Column(db.Text)
     avatar_url = db.Column(db.String(255))
     website = db.Column(db.String(255))
+    
+    # User status and registration control
+    is_approved = db.Column(db.Boolean(), default=False)
+    registration_enabled = db.Column(db.Boolean(), default=False, server_default='0')
     
     # Timestamps
     created_at = db.Column(db.DateTime, default=datetime.utcnow)

@@ -145,7 +145,7 @@ def test_post_search(client, create_test_post):
     # Test empty search
     response = client.get('/search?q=nonexistent')
     assert response.status_code == 200
-    assert b'No posts found' in response.data
+    assert b'Oof, aurgh, I found nothing!' in response.data
 
 
 def test_post_summary(client, auth, app):

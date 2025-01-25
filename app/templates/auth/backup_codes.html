@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Backup Codes - Hex's Webbed Blog✨{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Your Backup Codes 🔑</h2>
+        
+        <div class="backup-codes-instructions">
+            <p class="warning">⚠️ Save these backup codes in a safe place! They will not be shown again.</p>
+            <p>If you lose access to your authenticator app, you can use one of these one-time codes to sign in.</p>
+        </div>
+        
+        <div class="backup-codes-list">
+            {% for code in backup_codes %}
+            <div class="backup-code">{{ code }}</div>
+            {% endfor %}
+        </div>
+        
+        <div class="backup-codes-actions">
+            <a href="{{ url_for('user.settings') }}" class="btn btn-primary">
+                Return to Settings ✨
+            </a>
+        </div>
+    </div>
+</div>
+
+<style>
+.backup-codes-instructions {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--warning-bg);
+    border: 1px solid var(--warning-border);
+    border-radius: 8px;
+}
+
+.warning {
+    color: var(--warning-text);
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.backup-codes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.backup-code {
+    font-family: monospace;
+    font-size: 1.2rem;
+    padding: 0.5rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    text-align: center;
+}
+
+.backup-codes-actions {
+    margin-top: 2rem;
+    text-align: center;
+}
+</style>
+{% endblock %}

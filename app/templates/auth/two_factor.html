@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Two-Factor Authentication - Hex's Webbed Blog✨{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Two-Factor Authentication Required</h2>
+        
+        <div class="two-factor-instructions">
+            <p>Please enter the 6-digit code from your authenticator app 🔐</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label for="code">Authentication Code 🔢</label>
+                <input type="text" id="code" name="code" required
+                       placeholder="Enter 6-digit code"
+                       pattern="[0-9]{6}"
+                       title="Please enter a 6-digit code"
+                       autofocus>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Verify ✨
+                </button>
+            </div>
+        </form>
+        
+        <div class="auth-links">
+            <p>Lost access to your authenticator? <a href="{{ url_for('auth.recovery') }}">Use recovery codes</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}

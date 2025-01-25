@@ -40,7 +40,9 @@ def create_admin_user():
             email=admin_email,
             username='admin',
             display_name='Admin',
-            active=True
+            active=True,
+            is_approved=True,
+            registration_enabled=True  # Enable registration by default
         )
         admin_user.set_password(admin_password)
         admin_user.roles.append(admin_role)

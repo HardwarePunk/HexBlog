@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Account Recovery - Hex's Webbed Blog✨{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-box">
+        <h2>Account Recovery 🔐</h2>
+        
+        <div class="recovery-instructions">
+            <p>Enter one of your backup codes to sign in.</p>
+            <p class="note">Note: Each backup code can only be used once.</p>
+        </div>
+        
+        <form method="POST" class="auth-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            
+            <div class="form-group">
+                <label for="code">Backup Code 🔑</label>
+                <input type="text" id="code" name="code" required
+                       placeholder="Enter backup code"
+                       pattern="[A-F0-9]{8}"
+                       title="Please enter a valid backup code"
+                       autofocus>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Verify ✨
+                </button>
+                
+                <a href="{{ url_for('auth.login') }}" class="btn btn-secondary">
+                    Back to Login
+                </a>
+            </div>
+        </form>
+        
+        <div class="recovery-help">
+            <p>Lost your backup codes? Contact support for assistance.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+.recovery-instructions {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.note {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.recovery-help {
+    margin-top: 2rem;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+</style>
+{% endblock %}

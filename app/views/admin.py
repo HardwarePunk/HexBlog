@@ -9,9 +9,19 @@ from app.utils.upload import save_image, delete_image
 from werkzeug.utils import secure_filename
 import json
 import logging
+from flask_wtf import FlaskForm
+from wtforms import BooleanField
 
 # Rename the blueprint to avoid conflict with Flask-Admin
 admin_bp = Blueprint('admin_views', __name__, url_prefix='/admin')
+
+class RegistrationControlForm(FlaskForm):
+    """Form for registration control"""
+    registration_enabled = BooleanField('Allow Registration')
+
+class UserApprovalForm(FlaskForm):
+    """Form for user approval toggle"""
+    pass
 
 def admin_required(f):
     """Decorator to check if user is admin"""
@@ -200,9 +210,72 @@ def delete_post(id):
 def users():
     """List all users"""
     page = request.args.get('page', 1, type=int)
-    users = User.query.order_by(User.created_at.desc())\
+    
+    # Get all non-admin users
+    users = User.query.filter(~User.roles.any(name='admin'))\
+        .order_by(User.created_at.desc())\
         .paginate(page=page, per_page=10)
-    return render_template('admin/users.html', users=users)
+    
+    # Get registration status from current user (who is an admin)
+    registration_enabled = current_user.registration_enabled
+    
+    # Get pending non-admin users
+    pending_users = User.query.filter(
+        User.is_approved.is_(False),
+        ~User.roles.any(name='admin')
+    ).order_by(User.created_at.desc()).all()
+    
+    form = RegistrationControlForm()
+    approval_form = UserApprovalForm()
+    
+    return render_template('admin/users.html',
+                         users=users,
+                         registration_enabled=registration_enabled,
+                         pending_users=pending_users,
+                         form=form,
+                         approval_form=approval_form)
+
+@admin_bp.route('/users/toggle-registration', methods=['POST'])
+@login_required
+@admin_required
+def toggle_registration():
+    """Toggle user registration"""
+    form = RegistrationControlForm()
+    if form.validate_on_submit():
+        enabled = request.form.get('registration_enabled') == 'on'
+        
+        # Update the current admin user's registration_enabled setting
+        current_user.registration_enabled = enabled
+        db.session.commit()
+        flash('Registration settings updated successfully! ^_^', 'success')
+    else:
+        flash('Invalid form submission! >_<', 'error')
+        return 'Bad Request: ' + str(form.errors), 400
+    
+    return redirect(url_for('admin_views.users'))
+
+@admin_bp.route('/users/<int:user_id>/toggle-approval', methods=['POST'])
+@login_required
+@admin_required
+def toggle_user_approval(user_id):
+    """Toggle user approval status"""
+    # Only allow toggling non-admin users
+    user = User.query.filter(
+        User.id == user_id,
+        ~User.roles.any(name='admin')
+    ).first_or_404()
+    
+    form = UserApprovalForm()
+    if form.validate_on_submit():
+        user.is_approved = not user.is_approved
+        db.session.commit()
+        action = 'approved' if user.is_approved else 'revoked'
+        flash(f'User access has been {action}! ^_^', 'success')
+    else:
+        flash('Invalid form submission! >_<', 'error')
+        return 'Bad Request: ' + str(form.errors), 400
+    
+    return redirect(url_for('admin_views.users'))
 
 @admin_bp.route('/upload/image', methods=['POST'])
 @login_required

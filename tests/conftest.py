@@ -40,7 +40,9 @@ def app():
             email='admin@test.com',
             username='admin',
             display_name='Test Admin',
-            active=True
+            active=True,
+            is_approved=True,
+            registration_enabled=True
         )
         admin.set_password('password123')
         admin.roles.append(admin_role)
@@ -97,10 +99,18 @@ def auth(client):
 @pytest.fixture
 def create_test_user(app):
     with app.app_context():
-        user = User(email='admin@test.com', username='admin', password='password123')
+        user = User(
+            email='admin@test.com',
+            username='admin',
+            password='password123',
+            is_approved=True,
+            active=True,
+            registration_enabled=True
+        )
         user.set_password('password123')  # Set the password hash
         db.session.add(user)
         db.session.commit()
+        return user
         yield user
         db.session.delete(user)
         db.session.commit()

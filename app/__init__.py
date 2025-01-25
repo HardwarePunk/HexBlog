@@ -99,12 +99,14 @@ def create_app(test_config=None):
         return value.strftime('%B %d, %Y')
     
     # Register blueprints
+    from app.views.auth import auth_bp
     from app.views.main import main_bp
     from app.views.admin import admin_bp
-    from app.views.auth import auth_bp
+    from app.views.user import user_bp
     
+    app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/admin')
-    app.register_blueprint(auth_bp)  # Remove url_prefix to match test URLs
+    app.register_blueprint(user_bp)
     
     return app

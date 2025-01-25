@@ -1,8 +1,23 @@
 {% extends "admin/base.html" %}
 
-{% block admin_title %}Users{% endblock %}
+{% block admin_title %}User Management{% endblock %}
 
 {% block admin_content %}
+<div class="admin-card">
+    <h3>Registration Control</h3>
+    <form method="POST" action="{{ url_for('admin_views.toggle_registration') }}">
+        {{ form.csrf_token }}
+        <div class="form-group">
+            <label class="toggle-switch">
+                <input type="checkbox" name="registration_enabled" {% if registration_enabled %}checked{% endif %}>
+                <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Allow New User Registration</span>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Registration Setting</button>
+    </form>
+</div>
+
 <div class="table-responsive">
     <table class="admin-table">
         <thead>
@@ -12,10 +27,12 @@
                 <th>Roles</th>
                 <th>Status</th>
                 <th>Joined</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             {% for user in users.items %}
+            {% if not user.roles|selectattr("name", "equalto", "admin")|list %}
             <tr>
                 <td>{{ user.username }}</td>
                 <td>{{ user.email }}</td>
@@ -26,13 +43,30 @@
                 </td>
                 <td>
                     {% if user.active %}
-                        <span class="status-badge active">Active</span>
+                        {% if user.is_approved %}
+                            <span class="status-badge active">Active</span>
+                        {% else %}
+                            <span class="status-badge pending">Pending</span>
+                        {% endif %}
                     {% else %}
                         <span class="status-badge inactive">Inactive</span>
                     {% endif %}
                 </td>
                 <td>{{ user.created_at|format_date }}</td>
+                <td>
+                    <form method="POST" action="{{ url_for('admin_views.toggle_user_approval', user_id=user.id) }}" class="inline-form">
+                        {{ approval_form.csrf_token }}
+                        <button type="submit" class="btn btn-sm {% if user.is_approved %}btn-danger{% else %}btn-success{% endif %}">
+                            {% if user.is_approved %}
+                            Revoke Access
+                            {% else %}
+                            Approve
+                            {% endif %}
+                        </button>
+                    </form>
+                </td>
             </tr>
+            {% endif %}
             {% endfor %}
         </tbody>
     </table>
@@ -51,4 +85,65 @@
     {% endif %}
 </div>
 {% endif %}
+
+<style>
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--color-bg-secondary);
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: var(--color-text);
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: var(--color-accent);
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-label {
+    margin-left: 1rem;
+    vertical-align: super;
+}
+
+.inline-form {
+    display: inline-block;
+}
+
+.status-badge.pending {
+    background-color: var(--color-warning);
+    color: var(--color-text);
+}
+</style>
 {% endblock %}
