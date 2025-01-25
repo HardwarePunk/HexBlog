@@ -7,12 +7,12 @@
     --color-surface: #004b6e;
     --color-text: #ffffff;
     --color-text-muted: #aaaaaa;
-    --color-accent: #ff6361;
+    --color-accent: #aaffb8;
     --color-white: #ffffff;
     --color-black: #000000;
     --color-gray-light: #2a4d5f;
     --color-gray-medium: #1e3a4a;
-    --color-gray-dark: #0e2838;
+    --color-gray-dark: #3a0570;
     --color-success: #aaffb8;
     --color-success-dark: #88cc94;
 
@@ -58,7 +58,7 @@ body {
     background: var(--color-background);
     color: var(--color-text);
     line-height: var(--line-height-base);
-    background-image: url('../images/stars.gif');
+    background-image: url('../images/background.gif');
 }
 
 /* Layout */
@@ -188,6 +188,25 @@ body {
     background: var(--color-accent);
     transform: translate(2px, 2px);
     box-shadow: 1px 1px 0 var(--color-black);
+}
+
+.comment-content {
+    padding: var(--spacing-sm);
+    background: var(--color-gray-dark);
+    border-radius: var(--border-radius);
+    border: var(--border-width) solid var(--color-accent);
+    margin: var(--spacing-xs) 0;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    color: var(--color-text);
+}
+
+.post-container {
+    padding: var(--spacing-sm);
+    background: var(--color-surface);
+    border-radius: var(--border-radius);
+    border: var(--border-width) solid var(--color-primary);
+    margin: var(--spacing-xs) 0;
 }
 
 /* Form Help Text */

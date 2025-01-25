@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Hex's Webbed Blog✨{% endblock %}</title>
+    <title>{% block title %}Hex Blag✨{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="alternate" type="application/rss+xml" title="Hex Blag RSS Feed" href="{{ url_for('main.rss_feed') }}">
     <!-- Webring script (optional but very retro!) -->
     {% block extra_head %}{% endblock %}
 </head>
@@ -36,6 +37,7 @@
                     {% else %}
                         <li><a href="{{ url_for('auth.login') }}">🔑 Login</a></li>
                     {% endif %}
+                    <li><a href="{{ url_for('main.rss_feed') }}">📰 RSS</a></li>
                 </ul>
             </nav>
         </aside>

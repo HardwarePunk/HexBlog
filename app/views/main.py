@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, make_response, current_app
 from flask_login import current_user, login_required
 from app.models.post import Post
 from app.models.comment import Comment
 from app.models.user import User
 from app.models.forms import CommentForm
+from app.utils.feed import generate_feed
 from app import db
 
 main_bp = Blueprint('main', __name__)
@@ -89,6 +90,33 @@ def search():
     ).order_by(Post.published_at.desc()).all()
     
     return render_template('main/search.html', posts=posts, query=query)
+
+@main_bp.route('/feed.xml')
+def rss_feed():
+    """Generate RSS feed of published posts"""
+    try:
+        # Get published posts, ordered by publish date
+        posts = Post.query.filter_by(is_published=True)\
+            .order_by(Post.published_at.desc())\
+            .limit(20)\
+            .all()
+        
+        # Generate feed
+        site_url = request.url_root.rstrip('/')
+        fg = generate_feed(posts, site_url)
+        
+        # Create the response
+        response = make_response(fg.rss_str())
+        response.headers.set('Content-Type', 'application/rss+xml')
+        return response
+    except Exception as e:
+        current_app.logger.error(f"Error generating RSS feed: {str(e)}")
+        abort(500)
+
+@main_bp.route('/feed')
+def feed_redirect():
+    """Redirect /feed to /feed.xml"""
+    return redirect(url_for('main.rss_feed'))
 
 @main_bp.app_template_filter('format_date')
 def format_date(date, format='%B %d, %Y'):
